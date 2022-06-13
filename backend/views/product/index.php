@@ -14,11 +14,16 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="product-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Product', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <div class="row">
+        <div class="col-md-8">
+            <h1><?= Html::encode($this->title) ?></h1>
+        </div>
+        <div class="col-md-4 text-right">
+            <p>
+                <?= Html::a('Create Product', ['create'], ['class' => 'btn btn-primary']) ?>
+            </p>
+        </div>
+    </div>
 
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -27,23 +32,55 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+          
 
-            'id',
+            ['attribute'=>'id',
+                'contentOptions'=>['style'=>'width:5%']
+        ],
             'name',
-            'description:ntext',
-            'image',
-            'price',
-            //'status',
-            //'created_at',
+            [
+                'attribute'=> 'description',
+                'contentOptions'=>['style'=>'width:25%']
+            ],
+            [
+                'attribute'=>'image',
+               'label'=>'Image',
+               'contentOptions'=>['style'=>'width : 10%'],
+               'content'=>function($model)
+               {
+                    return Html::img($model->getImageUrl(),['style'=>'width:50px']);
+               },
+              
+            ],
+           [
+                'attribute'=>'price',
+                'format' => 'currency',
+                'contentOptions'=>['style'=>'width : 12%']
+            ],
+            [
+                'attribute'=>'status',
+                'contentOptions'=>['style'=>'width:10%'],
+                'content'=>function($model)
+               {
+                    return Html::tag('span',$model->status ? 'published' : 'draft', ['class'=> $model->status ? 'badge badge-success' : 'badge badge-danger' ]);
+               },
+
+            ],
+            [
+                'attribute'=>'created_at',
+                'format' => 'datetime',
+                'contentOptions'=>['style'=>'width:12%']
+            ],
             //'created_by',
             //'modified_at',
             //'modified_by',
             [
                 'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Product $model, $key, $index, $column) {
+                'contentOptions'=>['style'=>'width:7%'],
+                'header'=>'Action',
+                'urlCreator' => function ($action,  $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                }
             ],
         ],
     ]); ?>

@@ -3,6 +3,11 @@
 namespace common\models;
 
 use Yii;
+use common\models\Product;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
+use yii\helpers\FileHelper;
 
 /**
  * This is the model class for table "products".
@@ -25,6 +30,13 @@ use Yii;
  */
 class Product extends \yii\db\ActiveRecord
 {
+
+    /**
+    *@var \yii\web\UploadedFile
+    **/
+
+    public $imageFile;
+
     /**
      * {@inheritdoc}
      */
@@ -39,12 +51,13 @@ class Product extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'price', 'status'], 'required'],
+            [['name', 'price', 'status','image'], 'required'],
             [['description'], 'string'],
             [['price'], 'number'],
+            [['imageFile'],'image','extensions'=>['png','jpg','jpeg','webp'],'maxSize'=>5*1024*1024],
             [['status', 'created_at', 'created_by', 'modified_at', 'modified_by'], 'integer'],
             [['name'], 'string', 'max' => 255],
-            [['image'], 'string', 'max' => 2000],
+            [['image'], 'string'],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['modified_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['modified_by' => 'id']],
         ];
@@ -61,11 +74,12 @@ class Product extends \yii\db\ActiveRecord
             'description' => 'Description',
             'image' => 'Image',
             'price' => 'Price',
-            'status' => 'Status',
+            'status' => 'Published',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'modified_at' => 'Modified At',
             'modified_by' => 'Modified By',
+            'imageFile' => 'Product Image',
         ];
     }
 
@@ -117,4 +131,51 @@ class Product extends \yii\db\ActiveRecord
     {
         return new \common\models\query\ProductQuery(get_called_class());
     }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class'=>BlameableBehavior::class,
+                'updatedByAttribute'=>'modified_by'
+            ],
+            [
+                'class'=>TimeStampBehavior::class,
+                'updatedAtAttribute'=>'modified_at'
+            ]
+            
+        ];
+    }
+
+    public function save($runValidation=false,$attributeNames=null)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        if($this->imageFile)
+        {
+            $this->image = '/products/'.Yii::$app->security->generateRandomString(32).'/'.$this->imageFile->name;
+            print_r($this->image);
+           
+        }
+
+         $ok = parent::save($runValidation,$attributeNames);
+        if($ok)
+        {
+            $fullPath = Yii::getAlias('@frontend/web/storage'.$this->image);
+            $dir = dirname($fullPath);
+            if(FileHelper::createDirectory($dir) ||  !$this->imageFile->saveAs($fullPath))
+            {
+                $transaction->rollBack();
+                return false;
+            }
+                $transaction->commit();
+        }
+        return $ok;
+ }
+
+public function getImageUrl()
+{
+    $imageUrl = Yii::$app->params['frontendUrl'];
+    return $imageUrl.'/storage'.$this->image;
+}
+
 }
