@@ -31,14 +31,33 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'name',
-            'description:ntext',
-            'image',
-            'price',
-            'status',
-            'created_at',
-            'created_by',
-            'modified_at',
-            'modified_by',
+            'description:html',
+            [
+                'attribute'=>'image',
+               'label'=>'Image',
+               'format' =>['html'],
+               'value'=>function($model)
+               {
+                    return Html::img($model->getImageUrl(),['style'=>'width:50px']);
+               },
+              
+            ],
+            [
+                'attribute'=>'price',
+                'format' => 'currency',
+            ],
+          [
+                'attribute'=>'status',
+                'format'=>['html'],
+                'value' => function($model)
+                {
+                    return Html::tag('span',$model->status ? 'published':'draft',['class'=>$model->status ? 'badge badge-success': 'badge badge-danger']);
+                }
+            ],
+            'created_at:date',
+            'createdBy.username',
+            'modified_at:date',
+            'updatedBy.email',
         ],
     ]) ?>
 

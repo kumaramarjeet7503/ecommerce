@@ -40,6 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             [
                 'attribute'=> 'description',
+                'format'=>'html',
                 'contentOptions'=>['style'=>'width:25%']
             ],
             [
