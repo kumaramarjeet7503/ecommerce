@@ -8,7 +8,7 @@ use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;
 
 $this->title = 'Signup';
-$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="site-signup">
         <div class="row justify-content-center">
@@ -17,10 +17,14 @@ $this->params['breadcrumbs'][] = $this->title;
             <p>Please fill out the following fields to signup:</p>
             <?php $form = ActiveForm::begin(['id' => 'form-signup']); ?>
 
+                <div class="row">
+                <div class="col-md-6">  
                 <?= $form->field($model, 'firstname')->textInput(['autofocus' => true]) ?>
-
+                </div>
+                <div class="col-md-6"> 
                 <?= $form->field($model, 'lastname')->textInput(['autofocus' => true]) ?>                
-
+                </div>
+            </div>
                 <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
                 <?= $form->field($model, 'email') ?>
