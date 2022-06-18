@@ -13,6 +13,8 @@ use yii\web\IdentityInterface;
  *
  * @property integer $id
  * @property string $username
+  * @property string $firstname
+   * @property string $lastname
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $verification_token
@@ -54,6 +56,8 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
+            [['firstname','lastname'],'required'],
+            [['firstname','lastname'],'string'],
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
         ];
@@ -209,5 +213,11 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    public function getDisplayName()
+    {
+        $fullName = trim($this->firstname.$this->lastname);
+        return $fullName;
     }
 }

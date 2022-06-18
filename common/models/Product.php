@@ -51,13 +51,14 @@ class Product extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'price', 'status','image'], 'required'],
+            [['name', 'price', 'status'], 'required'],
+            [['name'],'unique'],
             [['description'], 'string'],
             [['price'], 'number'],
-            [['imageFile'],'image','extensions'=>['png','jpg','jpeg','webp'],'maxSize'=>5*1024*1024],
+            [['imageFile'],'image','maxSize'=>10*1024*1024],
             [['status', 'created_at', 'created_by', 'modified_at', 'modified_by'], 'integer'],
             [['name'], 'string', 'max' => 255],
-            [['image'], 'string'],
+            [['image'], 'string','max'=>2000],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['modified_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['modified_by' => 'id']],
         ];
@@ -137,45 +138,60 @@ class Product extends \yii\db\ActiveRecord
         return [
             [
                 'class'=>BlameableBehavior::class,
-                'updatedByAttribute'=>'modified_by'
+                'updatedByAttribute'=>'modified_by',
+                'createdByAttribute'=>'created_by',
             ],
             [
                 'class'=>TimeStampBehavior::class,
-                'updatedAtAttribute'=>'modified_at'
+                'updatedAtAttribute'=>'modified_at',
+                'createdAtAttribute'=>'created_at'
             ]
             
         ];
     }
 
-    public function save($runValidation=false,$attributeNames=null)
+    public function save($runValidation=true,$attributeNames=null)
     {
-        $transaction = Yii::$app->db->beginTransaction();
+        
         if($this->imageFile)
         {
-            $this->image = '/products/'.Yii::$app->security->generateRandomString(32).'/'.$this->imageFile->name;
-            print_r($this->image);
-           
+            $this->image = '/products/'.Yii::$app->security->generateRandomString(10).'/'.$this->imageFile->name;
+
         }
 
+        $transaction = Yii::$app->db->beginTransaction();
          $ok = parent::save($runValidation,$attributeNames);
-        if($ok)
+
+        if($ok && $this->imageFile)
         {
             $fullPath = Yii::getAlias('@frontend/web/storage'.$this->image);
             $dir = dirname($fullPath);
-            if(FileHelper::createDirectory($dir) ||  !$this->imageFile->saveAs($fullPath))
+            $isCreatedDir = FileHelper::createDirectory($dir);
+            $isImageSaved =  $this->imageFile->saveAs($fullPath);
+
+           
+            if( $isCreatedDir == false || $isImageSaved == false )
             {
+
                 $transaction->rollBack();
                 return false;
             }
-                $transaction->commit();
         }
-        return $ok;
+        $transaction->commit();
+
+        return true;
+
  }
 
 public function getImageUrl()
 {
     $imageUrl = Yii::$app->params['frontendUrl'];
     return $imageUrl.'/storage'.$this->image;
+}
+
+public function getShortDesc()
+{
+   return \yii\helpers\StringHelper::truncateWords(strip_tags($this->description),30) ;
 }
 
 }

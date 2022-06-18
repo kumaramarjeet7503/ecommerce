@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
+use yii\grid\SerialColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 /* @var $this yii\web\View */
@@ -31,11 +32,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'columns' => [
-          
-
-            ['attribute'=>'id',
-                'contentOptions'=>['style'=>'width:5%']
+        'columns' => [          
+            [ 
+            'class' => SerialColumn::className(),
+            'contentOptions'=>['style'=>'width:5%']
         ],
             'name',
             [
