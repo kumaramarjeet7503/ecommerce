@@ -17,6 +17,7 @@ use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 use yii\data\ActiveDataProvider;
 use common\models\Product;
+use common\models\UserAddress;
 
 /**
  * Site controller
@@ -231,4 +232,6 @@ class SiteController extends Controller
             'model' => $model
         ]);
     }
+
+
 }
