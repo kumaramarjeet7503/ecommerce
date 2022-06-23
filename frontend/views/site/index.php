@@ -18,7 +18,7 @@ $this->title = 'My Yii Application';
                     ],
                     'options' =>['class'=>'row'],
                     'itemOptions'=>[
-                        'class' => 'col-md-4 mb-4'
+                        'class' => 'col-md-4 mb-4 product-item'
                     ]
                 ]); ?>
         </div>
