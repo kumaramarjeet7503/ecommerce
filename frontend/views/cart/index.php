@@ -35,7 +35,7 @@ use yii\bootstrap4\Html;
  	</tbody>
  </table>
  		<div class=" card-body text-right">
- 		 <a	href="<?php echo yii\helpers\Url::to(['site/checkout'])?>" class="btn btn-primary" ?>Checkout</a>
+ 		 <a	href="<?php echo yii\helpers\Url::to(['cart/checkout'])?>" class="btn btn-primary" ?>Checkout</a>
  		 </div>
  </div>
  </div>
