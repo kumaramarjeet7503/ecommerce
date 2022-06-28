@@ -10,6 +10,8 @@ use yii\bootstrap4\Html;
 use yii\bootstrap4\Nav;
 use yii\bootstrap4\NavBar;
 
+$cartItemCount = $this->params['cartItemCount'];
+
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -35,7 +37,11 @@ AppAsset::register($this);
         ],
     ]);
     $menuItems = [
-        ['label' => 'My Cart', 'url' => ['/cart/index']],
+        [
+        'label' => 'My Cart <span id="cart-quantity" class="badge badge-danger">' .$cartItemCount.'</span>',
+         'url' => ['/cart/index'],
+         'encode'=>false
+     ],
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];

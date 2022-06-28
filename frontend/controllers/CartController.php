@@ -11,7 +11,7 @@ use common\models\Product;
 use yii\web\NotFoundHttpException;
 use yii\filters\ContentNegotiator;
 
-class CartController extends Controller
+class CartController extends \frontend\base\Controller
 {
 	public function behaviours()
 	{
@@ -35,7 +35,7 @@ class CartController extends Controller
 				'rules' => [
 					'actions' => [''],
 					'allow' =>true,
-					'roles' =>['@']
+					'roles' =>['?']
 				]
 			],
 		];
@@ -43,9 +43,9 @@ class CartController extends Controller
 
 	public function actionIndex()
 	{
-		if(Yii::$app->user->IsGuest)
+		if(Yii::$app->user->isguest)
 		{
-
+			$cartItem = \Yii::$app->session->get(CartItem::SESSION_KEY,[]);
 		}
 		else
 		{
@@ -60,8 +60,9 @@ class CartController extends Controller
 				  		LEFT JOIN products as p on p.id = c.product_id
 				  		WHERE c.user_id = :userId', [':userId' => \Yii::$app->user->id]
 				)->asArray()->all();
-			return $this->render('index',['items'=>$cartItem]);
 		}
+
+		return $this->render('index',['items'=>$cartItem]);
 	}
 
 	public function actionAdd()
@@ -74,9 +75,22 @@ class CartController extends Controller
 			throw new NotFoundHttpException('Product not exist.');
 		}
 
-			if(Yii::$app->user->isGuest)
+			if(Yii::$app->user->isguest)
 			{
-				//ghgghgjh
+				
+				$cartItem = [
+					'id'=>$id,
+					'name'=>$product->name,
+					'price'=>$product->price,
+					'quantity'=>1,
+					'image'=>$product->image,
+					'totalPrice'=>$product->price 
+				];
+
+				$cartItems = \Yii::$app->session->get(CartItem::SESSION_KEY,[]);
+				$cartItems[] = $cartItem;
+				$this->logMessage($cartItems);
+				\Yii::$app->session->set(CartItem::SESSION_KEY,$cartItems);
 
 			}else
 			{

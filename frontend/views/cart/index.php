@@ -7,6 +7,7 @@ use yii\bootstrap4\Html;
 <div class="card">
 	<div class="card-header"> My Cart </div>
 	<div class="card-body p-0">
+		<?php if(!empty($items)): ?>
  <table class="table table-hover">
  	<tr>
  		<th>Product</th>
@@ -18,6 +19,7 @@ use yii\bootstrap4\Html;
  	</tr>
  	<tbody>
  		<?php foreach ($items as $item ): ?>
+ 			<?php print_r($items);die;?>
  	<tr>
  		<td><?php echo $item['name'] ?></td>
  		<td>
@@ -37,5 +39,8 @@ use yii\bootstrap4\Html;
  		<div class=" card-body text-right">
  		 <a	href="<?php echo yii\helpers\Url::to(['cart/checkout'])?>" class="btn btn-primary" ?>Checkout</a>
  		 </div>
+ 		 <php else: >
+ 		 	<p>Please add some items into cart.</p>
+ 		<?php endif; ?>
  </div>
  </div>
