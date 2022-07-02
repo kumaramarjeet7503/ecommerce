@@ -16,19 +16,20 @@ class CartController extends \frontend\base\Controller
 	public function behaviours()
 	{
 		return [
-			// [
-			// 	'class'=>ContentNegotiater::class,
-			// 	'only'=> ['add'],
-			// 	'formats'=>[
-			// 		'application/json' => Response::FORMAT_JSON
-			// 	],
-			// ],
 			[
 				'class' => ContentNegotiator::class,
 				'only' => ['add'],
 				'formats' => [
 					'application/json' => Response::FORMAT_JSON,
 				],
+			],
+			[
+				'class'=>VerbFilter::class,
+				'actions'=>['delete'=>
+				[
+					'POST','DELETE'
+				]
+			]
 			],
 			'access'=>[
 				'class' => AccessControl::className(),
@@ -50,7 +51,7 @@ class CartController extends \frontend\base\Controller
 		else
 		{
 			$cartItem = CartItem::findBySql('
-				SELECT c.product_id,
+				SELECT c.product_id as id,
 				p.name,
 				p.image,
 				p.price,
@@ -80,7 +81,7 @@ class CartController extends \frontend\base\Controller
 			$cartItems = \Yii::$app->session->get(CartItem::SESSION_KEY,[]);
 			$found = false;
 			foreach ($cartItems as  &$item) {
-				if($item['product_id']== $id)
+				if($item['id']== $id)
 				{
 					$item['quantity']++;
 					$found = true;
@@ -90,7 +91,7 @@ class CartController extends \frontend\base\Controller
 			if(!$found)
 				{
 					$cartItem = [
-						'product_id'=>$id,
+						'id'=>$id,
 						'name'=>$product->name,
 						'price'=>$product->price,
 						'quantity'=>1,
@@ -133,7 +134,7 @@ class CartController extends \frontend\base\Controller
 		{
 			$cartItems = \Yii::$app->session->get(CartItem::SESSION_KEY,[]);
 			foreach ($cartItems as $i => $cartItem) {
-				if($cartItem['product_id'] == $id)
+				if($cartItem['id'] == $id)
 				{
 					array_splice($cartItems, $i, 1);
 				}
@@ -145,6 +146,45 @@ class CartController extends \frontend\base\Controller
 			CartItem::deleteAll(['product_id'=>$id, 'user_id'=>currUserId()]);
 		}
 		return $this->redirect('index');
+	}
+
+	public function actionChangeQuantity()
+	{
+		$id = \Yii::$app->request->post('id');
+		$product = Product::find()->id($id)->published()->one();
+		if(!$product)
+		{
+
+			throw new NotFoundHttpException("Product not available.");
+			
+		}
+		$quantity = \Yii::$app->request->post('quantity');
+		if(isGuest())
+		{
+		$cartItems = \Yii::$app->session->get(CartItem::SESSION_KEY,[]);
+			foreach($cartItems as &$cartItem)
+			{
+				if($cartItem['id'] == $id )
+				{
+					$cartItem['quantity'] = $quantity;
+					break;
+				}
+			}
+			$this->logMessage($cartItems);
+			\Yii::$app->session->set(CartItem::SESSION_KEY,$cartItems);
+		}
+		else
+		{
+			$cartitems = CartItem::find()->UserId(currUserId)->productId($id)->one();
+			if($cartItems)
+			{
+				$cartItems->quantity = $quantity;
+				$cartItems->save();
+			}
+		}
+
+		return json_encode(CartItem::getTotalQuantityForUser(currUserId()));
+	
 	}
 
 	public function logMessage($obj)

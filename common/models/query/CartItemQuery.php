@@ -31,4 +31,14 @@ class CartItemQuery extends \yii\db\ActiveQuery
     {
         return parent::one($db);
     }
+
+    public function UserId($userId)
+    {
+        return $this->andWhere(['user_id'=>$userId]);
+    }
+
+    public function ProductId($id)
+    {
+        return $this->andWhere(['product_id'=>$id]);
+    }
 }

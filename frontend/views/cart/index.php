@@ -2,13 +2,15 @@
 
 
 use yii\bootstrap4\Html;
+use yii\helpers\Url;
+
  ?>
 
 <div class="card">
 	<div class="card-header"> My Cart </div>
 	<div class="card-body p-0">
 		<?php if(!empty($items)): ?>
- <table class="table table-hover">
+ <table class="table table-hover ">
  	<tr>
  		<th>Product</th>
  		<th>Image</th>
@@ -21,16 +23,16 @@ use yii\bootstrap4\Html;
 
  		<?php foreach ($items as $item ): ?>
 
- 	<tr>
+ 	<tr class="table-light" data-id= "<?php echo $item['id']?>" data-url = "<?php echo Url::to(['/cart/change-quantity']) ?>" >
  		<td><?php echo $item['name'] ?></td>
  		<td>
  			<img src = "<?php echo Yii::$app->params['frontendUrl'].'/storage'.$item['image'] ?>" style="width :50px" ></img>
  			</td>
  		<td><?php echo $item['price'] ?></td>
- 		<td><?php echo $item['quantity'] ?></td>
+ 		<td ><input type="number" class="form-control item-quantity" style="width: 60px" value="<?php echo $item['quantity'] ?>"></input></td>
  		<td><?php echo $item['totalPrice'] ?></td>
  		
- 		<td><?php echo Html::a('Delete',['cart/delete','id'=>$item['product_id']],['class'=>'btn btn-outline-danger sm','data-method'=>'post','data-confirm'=>'Are you sure you want to remove this product ?']) ?></td>
+ 		<td><?php echo Html::a('Delete',['cart/delete','id'=>$item['id']],['class'=>'btn btn-outline-danger sm','data-method'=>'post','data-confirm'=>'Are you sure you want to remove this product ?']) ?></td>
  		
  	</tr>
  <?php endforeach; ?>

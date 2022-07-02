@@ -31,6 +31,9 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
 
+    public $password;
+    public $passwordConfirm;
+
 
     /**
      * {@inheritdoc}
@@ -56,8 +59,8 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['firstname','lastname'],'required'],
-            [['firstname','lastname'],'string'],
+            [['firstname','lastname','username','email'],'required'],
+            [['firstname','lastname','username','email'],'string'],
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
         ];
@@ -219,5 +222,17 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $fullName = trim($this->firstname.$this->lastname);
         return $fullName;
+    }
+
+    public function getAddresses()
+    {
+       return $this->hasMany(UserAddress::class,['user_id'=>'id']);
+    }
+
+    public function getAddress()
+    {
+        $address = $this->addresses[0] ?? new UserAddress();
+        $address->user_id = $this->id;
+        return $address;
     }
 }

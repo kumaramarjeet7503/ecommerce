@@ -12,11 +12,12 @@ use Yii;
  * @property int $quantity
  * @property int $user_id
  *
- * @property Products $product
+ * @property Product $product
  * @property User $user
  */
 class CartItem extends \yii\db\ActiveRecord
 {
+    const SESSION_KEY = 'CART_ITEMS';
     /**
      * {@inheritdoc}
      */
@@ -33,7 +34,7 @@ class CartItem extends \yii\db\ActiveRecord
         return [
             [['product_id', 'quantity', 'user_id'], 'required'],
             [['product_id', 'quantity', 'user_id'], 'integer'],
-            [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Products::className(), 'targetAttribute' => ['product_id' => 'id']],
+            [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -54,11 +55,11 @@ class CartItem extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Product]].
      *
-     * @return \yii\db\ActiveQuery|\common\models\query\ProductsQuery
+     * @return \yii\db\ActiveQuery|\common\models\query\ProductQuery
      */
     public function getProduct()
     {
-        return $this->hasOne(Products::className(), ['id' => 'product_id']);
+        return $this->hasOne(Product::className(), ['id' => 'product_id']);
     }
 
     /**
@@ -71,6 +72,24 @@ class CartItem extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
+    public static function getTotalQuantityForUser($curruserId)
+    {
+        if(isGuest())
+        {
+            $cartItems = \Yii::$app->session->get(CartItem::SESSION_KEY,[]);
+            $sum = 0;
+            foreach($cartItems as $cartItem)
+            {
+                $sum += $cartItem['quantity'];
+            }
+        }else
+        {
+            $sum = CartItem::findbySql("SELECT sum(quantity) FROM cart_items WHERE user_id = :user_id",[':user_id'=>$currUserId])->scalar();
+        }
+
+        return $sum;
+    }
+
     /**
      * {@inheritdoc}
      * @return \common\models\query\CartItemQuery the active query used by this AR class.
@@ -79,4 +98,6 @@ class CartItem extends \yii\db\ActiveRecord
     {
         return new \common\models\query\CartItemQuery(get_called_class());
     }
+
+
 }
