@@ -102,7 +102,13 @@ class CartItem extends \yii\db\ActiveRecord
             }
         }else
         {
-            $sum = CartItem::findbySql("SELECT sum(quantity * price) FROM cart_items WHERE user_id = :user_id",[':user_id'=>$currUserId])->scalar();
+            $sum = CartItem::findbySql(
+                "SELECT sum(c.quantity * p.price) 
+                FROM cart_items as c 
+                LEFT JOIN products as p
+                on c.product_id = p.id 
+                WHERE user_id = :user_id",
+                [':user_id'=>$currUserId])->scalar();
         }
 
         return $sum;
