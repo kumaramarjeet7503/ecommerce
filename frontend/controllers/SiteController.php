@@ -18,6 +18,7 @@ use frontend\models\ContactForm;
 use yii\data\ActiveDataProvider;
 use common\models\Product;
 use common\models\UserAddress;
+use common\models\CartItem;
 
 /**
  * Site controller
@@ -83,6 +84,7 @@ class SiteController extends \frontend\base\Controller
             'query'=>Product::find()->published(),
             'pagination'=>['pageSize' =>3]
         ]);
+        // echo "index";die;
 
         return $this->render('index',['dataProvider'=>$dataProvider]);
     }
@@ -95,19 +97,20 @@ class SiteController extends \frontend\base\Controller
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
+
             return $this->goHome();
         }
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
+        }else {
+            $model->password = '';
+
+            return $this->render('login', [
+                'model' => $model,
+            ]);
         }
-
-        $model->password = '';
-
-        return $this->render('login', [
-            'model' => $model,
-        ]);
     }
 
     /**

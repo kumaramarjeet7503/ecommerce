@@ -29,7 +29,7 @@ use yii\helpers\Url;
  			<img src = "<?php echo Yii::$app->params['frontendUrl'].'/storage'.$item['image'] ?>" style="width :50px" ></img>
  			</td>
  		<td><?php echo $item['price'] ?></td>
- 		<td ><input type="number" class="form-control item-quantity" style="width: 60px" value="<?php echo $item['quantity'] ?>"></input></td>
+ 		<td ><input type="number" min="1" class="form-control item-quantity" style="width: 60px" value="<?php echo $item['quantity'] ?>"></input></td>
  		<td><?php echo $item['totalPrice'] ?></td>
  		
  		<td><?php echo Html::a('Delete',['cart/delete','id'=>$item['id']],['class'=>'btn btn-outline-danger sm','data-method'=>'post','data-confirm'=>'Are you sure you want to remove this product ?']) ?></td>

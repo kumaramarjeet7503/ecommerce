@@ -72,7 +72,7 @@ class CartItem extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
-    public static function getTotalQuantityForUser($curruserId)
+    public static function getTotalQuantityForUser($currUserId)
     {
         if(isGuest())
         {
@@ -90,6 +90,24 @@ class CartItem extends \yii\db\ActiveRecord
         return $sum;
     }
 
+        public static function getTotalPriceForUser($currUserId)
+    {
+        if(isGuest())
+        {
+            $cartItems = \Yii::$app->session->get(CartItem::SESSION_KEY,[]);
+            $sum = 0;
+            foreach($cartItems as $cartItem)
+            {
+                $sum += $cartItem['quantity']*$cartItem['price'];
+            }
+        }else
+        {
+            $sum = CartItem::findbySql("SELECT sum(quantity * price) FROM cart_items WHERE user_id = :user_id",[':user_id'=>$currUserId])->scalar();
+        }
+
+        return $sum;
+    }
+
     /**
      * {@inheritdoc}
      * @return \common\models\query\CartItemQuery the active query used by this AR class.
@@ -97,6 +115,23 @@ class CartItem extends \yii\db\ActiveRecord
     public static function find()
     {
         return new \common\models\query\CartItemQuery(get_called_class());
+    }
+
+    public static function getItemsForUser($currUserId)
+    {
+        return CartItem::findBySql("
+                SELECT 
+                c.product_id as id,
+                p.name,
+                p.image,
+                p.price,
+                c.quantity,
+                p.price * c.quantity as totalPrice
+                FROM cart_items as c 
+                LEFT JOIN products as p on p.id = c.product_id
+                WHERE c.user_id = :userId", [':userId' => $currUserId]
+            )->asArray()->all();
+
     }
 
 

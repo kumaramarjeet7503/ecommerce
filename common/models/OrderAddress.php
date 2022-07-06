@@ -14,7 +14,7 @@ use Yii;
  * @property string|null $country
  * @property int $pincode
  *
- * @property Orders $order
+ * @property Order $order
  */
 class OrderAddress extends \yii\db\ActiveRecord
 {
@@ -38,7 +38,7 @@ class OrderAddress extends \yii\db\ActiveRecord
             [['city'], 'string', 'max' => 250],
             [['state', 'country'], 'string', 'max' => 100],
             [['order_id'], 'unique'],
-            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Orders::className(), 'targetAttribute' => ['order_id' => 'id']],
+            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
         ];
     }
 
@@ -60,11 +60,11 @@ class OrderAddress extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Order]].
      *
-     * @return \yii\db\ActiveQuery|\common\models\query\OrdersQuery
+     * @return \yii\db\ActiveQuery|\common\models\query\OrderQuery
      */
     public function getOrder()
     {
-        return $this->hasOne(Orders::className(), ['id' => 'order_id']);
+        return $this->hasOne(Order::className(), ['id' => 'order_id']);
     }
 
     /**

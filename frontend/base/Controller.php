@@ -11,11 +11,8 @@ class Controller extends \yii\web\Controller
 
 	public function beforeAction($action)
 	{
-		if(isGuest())
-		{
 			$this->view->params['cartItemCount'] = CartItem::getTotalQuantityForUser(currUserId());
-		return parent::beforeAction($action);
-	}
+			return parent::beforeAction($action);
 	}
 }
 

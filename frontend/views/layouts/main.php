@@ -10,7 +10,8 @@ use yii\bootstrap4\Html;
 use yii\bootstrap4\Nav;
 use yii\bootstrap4\NavBar;
 
-$cartItemCount = $this->params['cartItemCount'];
+$cartItemCount = isset($this->params['cartItemCount']) ? $this->params['cartItemCount'] : 0 ;
+// $cartItemCount =4;
 
 AppAsset::register($this);
 ?>
