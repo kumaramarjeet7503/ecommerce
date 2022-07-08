@@ -10,7 +10,7 @@ use yii\bootstrap4\Html;
 use yii\bootstrap4\Nav;
 use yii\bootstrap4\NavBar;
 
-$cartItemCount = isset($this->params['cartItemCount']) ? $this->params['cartItemCount'] : 0 ;
+$cartItemCount = $this->params['cartItemCount'];
 // $cartItemCount =4;
 
 AppAsset::register($this);
@@ -39,7 +39,7 @@ AppAsset::register($this);
     ]);
     $menuItems = [
         [
-        'label' => 'My Cart <span id="cart-quantity" class="badge badge-danger">' .$cartItemCount.'</span>',
+        'label' => 'My Cart <span id="cart-quantity" class="badge badge-danger">'.$cartItemCount.'</span>',
          'url' => ['/cart/index'],
          'encode'=>false
      ],

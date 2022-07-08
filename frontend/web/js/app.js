@@ -8,7 +8,7 @@ $(function(){
 		ev.preventDefault();
 		const $this = $(ev.target);
 		const id = $this.closest('.product-item').data('key');
-		console.log(id);
+		
 
 		$.ajax({
 			method: 'POST',
@@ -25,14 +25,13 @@ $(function(){
 		const $this = $(ev.target);
 		let $tr = $this.closest('tr');
 		id = $tr.data('id');
-		console.log($tr);
+	
 		$.ajax({
 			method : 'post',
 			url : $tr.data('url'),
 			data : {id,quantity:$this.val()},
 			success : function(totalQuantity)
-			{
-				console.log(totalQuantity);
+			{		 totalQuantity = totalQuantity.replaceAll('"','');
 				$cartQuantity.text(parseInt(totalQuantity));
 			}
 		})
