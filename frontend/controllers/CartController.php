@@ -27,11 +27,18 @@ class CartController extends \frontend\base\Controller
 			],
 			[
 				'class'=>VerbFilter::class,
-				'actions'=>['delete'=>
+				'actions'=>
 				[
-					'POST','DELETE'
-				]
-			]
+					'delete'=>
+					[
+						'POST','DELETE'
+					],
+					'create-order'=>
+					[
+						'POST'
+					]
+				],
+
 			],
 			'access'=>[
 				'class' => AccessControl::className(),
@@ -46,14 +53,7 @@ class CartController extends \frontend\base\Controller
 
 	public function actionIndex()
 	{
-		if(\Yii::$app->user->isGuest)
-		{
-			$cartItem = \Yii::$app->session->get(CartItem::SESSION_KEY,[]);
-		}
-		else
-		{
-			$cartItem = CartItem::getItemsForUser(currUserId());
-		}
+		$cartItem = CartItem::getItemsForUser(currUserId());
 
 		return $this->render('index',['items'=>$cartItem]);
 	}
@@ -146,9 +146,7 @@ class CartController extends \frontend\base\Controller
 		$product = Product::find()->id($id)->published()->one();
 		if(!$product)
 		{
-
-			throw new NotFoundHttpException("Product not available.");
-			
+			throw new NotFoundHttpException("Product not available.");	
 		}
 		$quantity = \Yii::$app->request->post('quantity');
 		if(isGuest())
@@ -162,21 +160,18 @@ class CartController extends \frontend\base\Controller
 					break;
 				}
 			}
-			$this->logMessage($cartItems);
 			\Yii::$app->session->set(CartItem::SESSION_KEY,$cartItems);
 		}
 		else
 		{
-			$cartitems = CartItem::find()->UserId(currUserId)->productId($id)->one();
+			$cartItems = CartItem::find()->UserId(currUserId())->productId($id)->one();
 			if($cartItems)
 			{
 				$cartItems->quantity = $quantity;
 				$cartItems->save();
 			}
 		}
-
 		return json_encode(CartItem::getTotalQuantityForUser(currUserId()));
-	
 	}
 
 	public function actionCheckout()
@@ -186,12 +181,13 @@ class CartController extends \frontend\base\Controller
 
 		if(!isGuest())
 		{
-			$user = Yii::$app->user->identity();
+			$user = Yii::$app->user->identity;
 			$userAddress = $user->getAddress();
 
 			$order->firstname = $user->firstname;
 			$order->lastname = $user->lastname;
 			$order->email = $user->email;
+			$order->mobile_no = $user->mobile_no;
 			$order->status = Order::STATUS_DRAFT;
 
 			$orderAddress->address = $userAddress->address;
@@ -199,13 +195,9 @@ class CartController extends \frontend\base\Controller
 			$orderAddress->state = $userAddress->state;
 			$orderAddress->country = $userAddress->country;
 			$orderAddress->pincode = $userAddress->pincode;
-
-			$cartItems = CartItem::getItemsForUser(currUserId());
-		}else
-		{
-			$cartItems = Yii::$app->session->get(CartItem::SESSION_KEY,[]);
 		}
 
+		$cartItems = CartItem::getItemsForUser(currUserId());
 		$productQuantity = CartItem::getTotalQuantityForUser(currUserId()); 
 		$totalPrice = CartItem::getTotalPriceForUser(currUserId());
 
@@ -216,6 +208,48 @@ class CartController extends \frontend\base\Controller
 			'productQuantity'=>$productQuantity,
 			'totalPrice'=>$totalPrice
 		]);
+	}
+
+	public function actionCreateOrder()
+	{
+		$cartItems = cartItem::getItemsForUser(currUserId());
+		if($cartItems == null)
+		{
+			$this->redirect(Yii::$app->homeUrl);
+		}
+
+		$transactionId = Yii::$app->request->post('transactionId');
+		$status = Yii::$app->request->post('status');
+
+		$order = new Order();
+		$orderAddress = new OrderAddress();
+
+		$order->transaction_id = $transactionId;
+		$order->status =  $status === 'COMPLETED' ? Order::STATUS_COMPLETED : STATUS_FAILURED;
+		$order->total_price = CartItem::getTotalPriceForUser(currUserId());
+		$order->created_at = time();
+		$order->created_by = currUserId();
+
+		$transaction = Yii::$app->db->begintransaction();
+		if($order->load(Yii::$app->request->post()) 
+			&& $order->save()
+		 	&& $order->saveOrderItems()
+		 	&& $order->saveAddress(Yii::$app->request->post()))
+			{		
+				$transaction->commit();
+				CartItem::clearCartItems(currUserId());
+				return json_encode([
+						'success'=>true
+					]);
+			}
+			else
+			{
+				$transaction->rollback();
+				return json_encode([
+					'success'=>'false',
+					'error' => $order->errors
+				]);
+			}
 	}
 
 	public function logMessage($obj)

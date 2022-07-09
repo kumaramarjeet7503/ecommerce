@@ -25,6 +25,8 @@ use yii\widgets\Pjax;
 <?= $form->field($user, 'username')->textInput(['autofocus' => true]) ?>
 
 <?= $form->field($user, 'email') ?>
+
+<?= $form->field($user, 'mobile_no')->textInput(['autofocus' => true]) ?>
 <div class="row">
 	<div class="col-md-6">
 		<?= $form->field($user, 'password')->passwordInput() ?>

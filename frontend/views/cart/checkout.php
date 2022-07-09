@@ -2,17 +2,18 @@
 
 use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;
-
+use yii\helpers\Url;
 ?>
 
-<?php $form = ActiveForm::begin([
-	'action'=>[''],	
-]); ?>
+
 
 <script src="https://www.paypal.com/sdk/js?client-id=ASkKestAqo0_uYeXlQVPsafWMrg-QY0Wlmbum3w3WyIXWa6xcM_0uXViBM1LF0TplCEc1dJq8ao6Vuym&currency=USD"></script>
 
 <div class="row">
 	<div class="col">
+		<?php $form = ActiveForm::begin([
+			'id'=>'checkout-form',	
+		]); ?>
 		<div class="card mb-3">
 			<div class="card-header"><h5>Account Information</h5></div>	
 			<div class="card-body">
@@ -25,6 +26,7 @@ use yii\bootstrap4\ActiveForm;
 					</div>
 				</div>
 				<?= $form->field($order, 'email') ?>
+				<?= $form->field($order, 'mobile_no')->textInput(['autofocus' => true]) ?> 
 			</div>
 		</div>
 
@@ -32,6 +34,7 @@ use yii\bootstrap4\ActiveForm;
 			<div class="card-header"><h5>Address Information</h5></div>	
 			<div class="card-body">
 
+				<?= $form->field($orderAddress, 'address')->textInput(['autofocus' => true]) ?>
 				<?= $form->field($orderAddress, 'city')->textInput(['autofocus' => true]) ?>
 				<?= $form->field($orderAddress, 'state')->textInput(['autofocus' => true]) ?>
 				<?= $form->field($orderAddress, 'pincode')->textInput(['autofocus' => true]) ?>
@@ -41,6 +44,7 @@ use yii\bootstrap4\ActiveForm;
 	</div>
 
 
+<?php ActiveForm::end() ?>
 
 	<div class="col">
 		
@@ -63,7 +67,6 @@ use yii\bootstrap4\ActiveForm;
 	</div>
 </div>
 
-<?php ActiveForm::end() ?>
 
 <script>
 	paypal.Buttons({
@@ -77,13 +80,37 @@ use yii\bootstrap4\ActiveForm;
         }]
     });
         },
-        // Finalize the transaction after payer approval
+   
         onApprove: (data, actions) => {
-        	return actions.order.capture().then(function(orderData) {
-            // Successful capture! For dev/demo purposes:
-            console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-            const transaction = orderData.purchase_units[0].payments.captures[0];
-            alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+        	return actions.order.capture().then(function(data) {
+            // console.log(data.id);
+            // console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+            const $form = $('#checkout-form');
+            var dataAjax = $form.serializeArray();
+            // console.log("data",dataAjax);
+            dataAjax.push({
+            	name :'transactionId',
+            	value : data.id
+            });
+            dataAjax.push({
+            	name : 'status',
+            	value : data.status
+            });
+
+            $.ajax({
+            	method:'post',
+            	url: '<?php echo Url::to(['/cart/create-order'])?>' ,
+            	data: dataAjax,
+            	success:function(response)
+            	{
+            		alert("Your order has been successfully done.");
+            		window.location.href = '';
+            	}
+
+            })
+
+            // const transaction = orderData.purchase_units[0].payments.captures[0];
+            // alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
             // When ready to go live, remove the alert and show a success message within this page. For example:
             // const element = document.getElementById('paypal-button-container');
             // element.innerHTML = '<h3>Thank you for your payment!</h3>';
