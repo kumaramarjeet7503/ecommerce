@@ -24,15 +24,22 @@ $(function(){
 	$itemQuantity.change(ev=>{
 		const $this = $(ev.target);
 		let $tr = $this.closest('tr');
+		const $td = $this.closest('td');
 		id = $tr.data('id');
 	
 		$.ajax({
 			method : 'post',
 			url : $tr.data('url'),
 			data : {id,quantity:$this.val()},
-			success : function(totalQuantity)
-			{		 totalQuantity = totalQuantity.replaceAll('"','');
+			success : function(response)
+			{	
+				console.log(JSON.parse(response));
+				response = JSON.parse(response);
+				totalQuantity = response.totalQuantity;
+				totalPrice = response.totalPrice;	 
+				// totalQuantity = response.totalQuantity.replaceAll('"','');
 				$cartQuantity.text(parseInt(totalQuantity));
+				$td.next().text(totalPrice);
 			}
 		})
 	})

@@ -3,6 +3,7 @@
 use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;
 use yii\helpers\Url;
+use common\models\Product;
 ?>
 
 
@@ -52,15 +53,24 @@ use yii\helpers\Url;
 			<div class="card-header"><h5>Order Information</h5></div>	
 			<div class="card-body">
 
-				<table class="table">
+				<table class="table">	
+			<tr>
+				<th>Image</th>
+				<th>Name</th>
+				<th>Quantity</th>
+				<th>Total Price</th>
+			</tr>
+			<tbody>
+				<?php foreach($cartItems as $item): ?>
 					<tr>
-						<td><?php echo $productQuantity ?> Product</td>
+						<td><img src='<?php echo Product::formatImageUrl($item['image']) ?>' style='width: 50px'></td>
+						<td><?php echo $item['name'] ?></td>
+						<td><?php echo $item['quantity'] ?></td>
+						<td><?php echo Yii::$app->formatter->asCurrency($item['price'] * $item['quantity']) ?></td>						
 					</tr>
-					<tr>
-						<td>Total Price</td>
-						<td class="text-right"><?php echo Yii::$app->formatter->asCurrency($totalPrice) ?></td>
-					</tr>
-				</table>
+				</tbody>
+			<?php endforeach; ?>
+		</table>
 
 				<p class="text-right mt-3">
 					<button class="btn btn-secondary">Checkout</button>

@@ -60,7 +60,7 @@ $orderAddress = $order->orderAddresses;
 	</div>
 
 	<div class="col">
-			<h4>Product Details</h4>
+		<h4>Product Details</h4>
 		<table class="table">	
 			<tr>
 				<th>Image</th>
@@ -83,13 +83,13 @@ $orderAddress = $order->orderAddresses;
 		<h4>Order Summary</h4>
 		<table class="table">
 			<tr>
-			<th>Total Item</th>
-			<td><?php echo $order->getItemsQuantity() ?></td>
+				<th>Total Item</th>
+				<td><?php echo $order->getItemsQuantity() ?></td>
 			</tr>
 			<tr>
-			<th>Total Price</th>
-			<td><?php echo Yii::$app->formatter->asCurrency($order->total_price) ?></td>
-		</tr>
+				<th>Total Price</th>
+				<td><?php echo Yii::$app->formatter->asCurrency($order->total_price) ?></td>
+			</tr>
 		</table>
 		<div id="paypal-button-container"></div>
 	</div>
@@ -113,7 +113,7 @@ $orderAddress = $order->orderAddresses;
 
         onApprove: (data, actions) => {
         	return actions.order.capture().then(function(details) {
-            
+        		
             // console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
             const $form = $('#checkout-form');
             var dataAjax = $form.serializeArray();
