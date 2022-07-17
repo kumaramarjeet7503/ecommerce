@@ -9,10 +9,11 @@ $orderAddress = $order->orderAddresses;
 
 ?>
 
-<script src="https://www.paypal.com/sdk/js?client-id=ASkKestAqo0_uYeXlQVPsafWMrg-QY0Wlmbum3w3WyIXWa6xcM_0uXViBM1LF0TplCEc1dJq8ao6Vuym&currency=USD"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=<?php echo param('paypalClientId')?>&currency=USD"></script>
 
 <div class="row">
 	<div class="col">
+		<h2>Order #<?php echo $order->id?></h2>
 		<h4>Account Information</h4>
 		<table class="table">
 			<tr>
@@ -131,7 +132,7 @@ $orderAddress = $order->orderAddresses;
             });
             dataOrder = data;
             // console.log(typeof(data));
-            console.log(data.orderID);
+            // console.log(data.orderID);
             $.ajax({
             	method:'post',
             	url: '<?php echo Url::to(['/cart/submit-payment','id'=>$order->id])?>' ,

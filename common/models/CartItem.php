@@ -125,19 +125,38 @@ class CartItem extends \yii\db\ActiveRecord
 
     public static function getItemsForUser($currUserId)
     {
-        return CartItem::findBySql("
-                SELECT 
-                c.product_id as id,
-                p.name,
-                p.image,
-                p.price,
-                c.quantity,
-                p.price * c.quantity as totalPrice
-                FROM cart_items as c 
-                LEFT JOIN products as p on p.id = c.product_id
-                WHERE c.user_id = :userId", [':userId' => $currUserId]
-            )->asArray()->all();
+        if(isGuest())
+        {
+            $cartItems = \Yii::$app->session->get(CartItem::SESSION_KEY,[]);
+        }
+        else{ 
+            $cartItems =  CartItem::findBySql("
+                        SELECT 
+                        c.product_id as id,
+                        p.name,
+                        p.image,
+                        p.price,
+                        c.quantity,
+                        p.price * c.quantity as totalPrice
+                        FROM cart_items as c 
+                        LEFT JOIN products as p on p.id = c.product_id
+                        WHERE c.user_id = :userId", [':userId' => $currUserId]
+                    )->asArray()->all();
+        }
 
+        return $cartItems;
+    }
+
+    public static function clearCartItems($currUserId)
+    {
+        if(isGuest())
+        {
+            Yii::$app->session->remove(CartItem::SESSION_KEY);
+        }
+        else
+        {
+            CartItem::deleteAll(['user_id'=>$currUserId]);
+        }
     }
 
 
