@@ -32,7 +32,7 @@ use yii\widgets\Pjax;
 		<?= $form->field($user, 'password')->passwordInput() ?>
 	</div>
 	<div class="col-md-6">
-		<?= $form->field($user, 'passwordConfirm')->passwordInput() ?>
+		<?= $form->field($user, 'password_repeat')->passwordInput() ?>
 	</div>
 </div>
 <button class="btn btn-primary" type="submit">
