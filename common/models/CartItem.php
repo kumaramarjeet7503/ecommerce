@@ -90,7 +90,7 @@ class CartItem extends \yii\db\ActiveRecord
         return $sum;
     }
 
-        public static function getTotalPriceForUser($currUserId)
+    public static function getTotalPriceForUser($currUserId)
     {
         if(isGuest())
         {
@@ -109,6 +109,33 @@ class CartItem extends \yii\db\ActiveRecord
                 on c.product_id = p.id 
                 WHERE user_id = :user_id",
                 [':user_id'=>$currUserId])->scalar();
+        }
+
+        return $sum;
+    }
+
+    public static function getTotalPriceOfItemForUser($productId,$currUserId)
+    {
+        if(isGuest())
+        {
+            $cartItems = \Yii::$app->session->get(CartItem::SESSION_KEY,[]);
+            $sum = 0;
+            foreach($cartItems as $cartItem)
+            {
+                if($cartItem['id'] == $productId )
+                {
+                    $sum += $cartItem['quantity']*$cartItem['price'];
+                }
+            }
+        }else
+        {
+            $sum = CartItem::findbySql(
+                "SELECT sum(c.quantity * p.price) 
+                FROM cart_items as c 
+                LEFT JOIN products as p
+                on c.product_id = p.id 
+                WHERE user_id = :user_id and product_id = :id",
+                [':id'=>$productId,':user_id'=>$currUserId])->scalar();
         }
 
         return $sum;

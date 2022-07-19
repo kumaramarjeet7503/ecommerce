@@ -194,4 +194,13 @@ public function getShortDesc()
    return \yii\helpers\StringHelper::truncateWords(strip_tags($this->description),30) ;
 }
 
+    public static function formatImageUrl($imagePath)
+    {
+        if ($imagePath) {
+            return Yii::$app->params['frontendUrl'] . '/storage' . $imagePath;
+        }
+
+        return Yii::$app->params['frontendUrl'] . '/img/no_image_available.png';
+    }
+
 }
