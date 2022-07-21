@@ -3,6 +3,7 @@
 /** @var \yii\web\View $this */
 /** @var string $content */
 
+
 use backend\assets\AppAsset;
 use common\widgets\Alert;
 use yii\bootstrap4\Breadcrumbs;
@@ -41,7 +42,7 @@ AppAsset::register($this);
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="<?php echo Yii::$app->homeUrl ?>">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
                 </li>
@@ -333,6 +334,7 @@ aria-hidden="true">
 
 
 <?php $this->endBody() ?>
+<?php echo $this->blocks['bodyEndScript'] ?? '' ?>
 </body>
 </html>
 <?php $this->endPage();

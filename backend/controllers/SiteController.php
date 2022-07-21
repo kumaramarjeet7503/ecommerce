@@ -8,6 +8,9 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
+use common\models\Order;
+use common\models\OrderItem;
+use common\models\User;
 
 /**
  * Site controller
@@ -62,7 +65,22 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $totalEarnings = Order::find()->paid()->sum('total_price') ;
+        $totalOrders = Order::find()->paid()->count();
+        $totalProducts = OrderItem::find()
+        ->alias('oi')
+        ->innerjoin(Order::tablename().' o','o.id = oi.order_id')
+        ->andWhere(['o.status'=>Order::STATUS_COMPLETED])
+        ->sum('quantity');
+        $totalUsers = User::find()->andWhere(['status'=>User::STATUS_ACTIVE])->count();
+
+        return $this->render('index',
+            [
+                'totalEarnings'=>$totalEarnings,
+                'totalOrders'=>$totalOrders,
+                'totalProducts'=>$totalProducts,
+                'totalUsers'=>$totalUsers
+            ]);
     }
 
     /**
