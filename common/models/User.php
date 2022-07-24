@@ -22,6 +22,7 @@ use yii\web\IdentityInterface;
  * @property integer $mobile_no
  * @property string $auth_key
  * @property integer $status
+ * @property integer $admin
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
@@ -35,6 +36,12 @@ class User extends ActiveRecord implements IdentityInterface
     public $password;
     public $password_repeat;
 
+    public function scenarios()
+    {
+        return array_merge(parent::scenarios(),[
+            'firstname','lastname','email','username','password','password_repeat'
+        ]);
+    }
 
     /**
      * {@inheritdoc}
@@ -64,6 +71,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['firstname','lastname','username','email'],'string'],
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+            [['admin'],'default','value'=>0],
             ['password','string','min'=>8],
             ['password_repeat','compare','compareAttribute'=>'password']
         ];
