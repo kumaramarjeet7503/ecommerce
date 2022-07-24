@@ -9,7 +9,9 @@
     <!-- Sale badge-->
     <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
     <!-- Product image-->
-    <img class="card-img-top" src="<?php echo $model->getImageUrl()?>" >
+    <a class="img-wrapper">
+    <img  class="card-img-top" src="<?php echo $model->getImageUrl()?>" >
+</a>
     <!-- Product details-->
     <div class="card-body p-4">
     	<hr style="background: #333">

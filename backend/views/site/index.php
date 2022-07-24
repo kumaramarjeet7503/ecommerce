@@ -8,6 +8,12 @@ $this->title = 'My Yii Application';
 
 ?>
 
+        <div class="card">
+    <div class="card-body">
+     
+        <h1>Dashboard</h1>
+    
+
 <!-- Content Row -->
 <div class="row">
 
@@ -124,6 +130,9 @@ $this->title = 'My Yii Application';
       </div>
     </div>
   </div>
+</div>
+</div>
+
 </div>
 </div>
 

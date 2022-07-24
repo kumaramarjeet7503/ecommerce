@@ -13,6 +13,8 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="product-view">
 
+    <div class="card">
+    <div class="card-body">
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
@@ -62,3 +64,5 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
 
 </div>
+    <div class="card">
+    <div class="card-body">

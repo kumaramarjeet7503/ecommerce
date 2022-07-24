@@ -32,7 +32,7 @@ use dosamigos\ckeditor\CKEditor;
         ])->textInput(['type'=>'file']) ?>
   
 
-    <?= $form->field($model, 'price')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'price')->textInput(['maxlength' => true,'type'=>'number','step'=>'0.01']) ?>
 
     <?= $form->field($model, 'status')->Checkbox() ?>
 

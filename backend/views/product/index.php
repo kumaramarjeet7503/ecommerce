@@ -15,6 +15,8 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="product-index">
 
+    <div class="card">
+    <div class="card-body">
     <div class="row">
         <div class="col-md-8">
             <h1><?= Html::encode($this->title) ?></h1>
@@ -37,16 +39,23 @@ $this->params['breadcrumbs'][] = $this->title;
             'class' => SerialColumn::className(),
             'contentOptions'=>['style'=>'width:5%']
         ],
-            'name',
+            [
+                'attribute'=>'name',
+                'contentOptions'=>['style'=>'width:10%'],
+            ],
             [
                 'attribute'=> 'description',
                 'format'=>'html',
-                'contentOptions'=>['style'=>'width:25%']
+                'contentOptions'=>['style'=>'width:30%'],
+                 'content'=> function($model)
+                {
+                    return \yii\helpers\StringHelper::truncateWords($model->description,7);
+                }
             ],
             [
                 'attribute'=>'image',
                'label'=>'Image',
-               'contentOptions'=>['style'=>'width : 10%'],
+               'contentOptions'=>['style'=>'width : 7%'],
                'content'=>function($model)
                {
                     return Html::img($model->getImageUrl(),['style'=>'width:50px']);
@@ -56,11 +65,11 @@ $this->params['breadcrumbs'][] = $this->title;
            [
                 'attribute'=>'price',
                 'format' => 'currency',
-                'contentOptions'=>['style'=>'width : 12%']
+                'contentOptions'=>['style'=>'width :10%']
             ],
             [
                 'attribute'=>'status',
-                'contentOptions'=>['style'=>'width:10%'],
+               'contentOptions'=>['style'=>'width : 7%'],
                 'content'=>function($model)
                {
                     return Html::tag('span',$model->status ? 'published' : 'draft', ['class'=> $model->status ? 'badge badge-success' : 'badge badge-danger' ]);
@@ -88,4 +97,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php Pjax::end(); ?>
 
+</div>
+</div>
 </div>

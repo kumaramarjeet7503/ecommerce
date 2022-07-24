@@ -16,6 +16,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="order-index">
 
+            <div class="card">
+    <div class="card-body">
+
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -80,4 +83,6 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 
 
+</div>
+</div>
 </div>

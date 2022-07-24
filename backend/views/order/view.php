@@ -14,6 +14,8 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="order-view">
 
+        <div class="card">
+    <div class="card-body">
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
@@ -90,4 +92,6 @@ $this->params['breadcrumbs'][] = $this->title;
         </tbody>
     </table>
 
+</div>
+</div>
 </div>

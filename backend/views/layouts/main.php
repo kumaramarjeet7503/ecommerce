@@ -81,7 +81,7 @@ AppAsset::register($this);
                         <div id="content">
 
                             <!-- Topbar -->
-                            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-1 static-top shadow">
 
                                 <!-- Sidebar Toggle (Topbar) -->
                                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -157,7 +157,7 @@ AppAsset::register($this);
 
 </nav>
 <!-- End of Topbar -->
-<div class="p-5">
+<div class="p-0">
     <?php echo $content ?>
 </div>
 </div>

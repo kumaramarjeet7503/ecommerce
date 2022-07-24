@@ -287,7 +287,7 @@ class CartController extends \frontend\base\Controller
 
 			if($paidAmount == $order->total_price && $response->result->status === 'COMPLETED' )
 			{
-				$order->status = Order::STATUS_COMPLETED;
+				$order->status = Order::STATUS_PAID;
 			}
 			$order->transaction_id = $response->result->purchase_units[0]->payments->captures[0]->id;
 
@@ -324,7 +324,7 @@ class CartController extends \frontend\base\Controller
 		$orderAddress = new OrderAddress();
 
 		$order->transaction_id = $transactionId;
-		$order->status =  $status === 'COMPLETED' ? Order::STATUS_COMPLETED : STATUS_FAILURED;
+		$order->status =  $status === 'COMPLETED' ? Order::STATUS_PAID : STATUS_FAILURED;
 		$order->total_price = CartItem::getTotalPriceForUser(currUserId());
 		$order->created_at = time();
 		$order->created_by = currUserId();
