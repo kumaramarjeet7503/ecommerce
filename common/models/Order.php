@@ -25,8 +25,9 @@ use common\models\CartItem;
 class Order extends \yii\db\ActiveRecord
 {
     const STATUS_DRAFT = 0;
-    const STATUS_COMPLETED = 1;
+    const STATUS_COMPLETED = 10;
     const STATUS_FAILURED = 2;
+    const STATUS_PAID = 1;
 
     /**
      * {@inheritdoc}
@@ -167,6 +168,16 @@ public function sendEmailToCustomer()
     ->setTo($this->email)
     ->setSubject('Your Order has been confirmed at :'.Yii::$app->name)
     ->send();
+}
+
+public static function getStatusLabels()
+{
+    return  [
+        self::STATUS_DRAFT => 'Draft',
+        self::STATUS_COMPLETED => 'Completed',
+        self::STATUS_FAILURED => 'Failure',
+        self::STATUS_PAID => 'Paid',
+    ];
 }
 
 }

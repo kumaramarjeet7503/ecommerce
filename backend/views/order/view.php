@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use common\models\Order;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Order */
@@ -30,7 +31,27 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'total_price',
-            'status',
+                [
+                'attribute'=>'status',
+                'contentOptions'=>['style'=>'width:15% '],
+                'format'=>'html',
+                'value'=> function($model)
+                {
+                   if($model->status == Order::STATUS_COMPLETED)
+                    {
+                        return Html::tag('span','completed',['class'=>'badge badge-success']);
+                    }
+                    else if($model->status == Order::STATUS_DRAFT)
+                    {
+                        return Html::tag('span','unpaid',['class'=>'badge badge-secondary']);
+                    }elseif ($model->status == Order::STATUS_PAID) {
+                        return Html::tag('span','paid',['class'=> 'badge badge-primary']);
+                    }else
+                    {
+                        return Html::tag('span','failure',['class'=> 'badge badge-danger']);
+                    }
+                }
+            ],
             'firstname',
             'lastname',
             'email:email',
@@ -41,5 +62,32 @@ $this->params['breadcrumbs'][] = $this->title;
             'created_by',
         ],
     ]) ?>
+
+    <h4>Order Items</h4>
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($model->orderItems as $item): ?>
+            <tr>
+                <td>
+                    <img src="<?php echo $item->product ? $item->product->getImageUrl() : \common\models\Product::formatImageUrl(null) ?>"
+                         style="width: 50px;">
+                </td>
+                <td><?php echo $item->product_name ?></td>
+                <td><?php echo $item->quantity ?></td>
+                <td><?php echo Yii::$app->formatter->asCurrency($item->unit_price) ?></td>
+                <td><?php echo Yii::$app->formatter->asCurrency($item->quantity * $item->unit_price) ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
 
 </div>

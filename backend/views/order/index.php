@@ -42,14 +42,19 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
              [
                 'attribute'=>'status',
+                'filter'=>Order::getStatusLabels(),
                 'contentOptions'=>['style'=>'width:15% '],
                 'content'=> function($model)
                 {
-                    if($model->status == Order::STATUS_DRAFT)
+                   if($model->status == Order::STATUS_COMPLETED)
+                    {
+                        return Html::tag('span','completed',['class'=>'badge badge-success']);
+                    }
+                    else if($model->status == Order::STATUS_DRAFT)
                     {
                         return Html::tag('span','unpaid',['class'=>'badge badge-secondary']);
-                    }elseif ($model->status == Order::STATUS_COMPLETED) {
-                        return Html::tag('span','completed',['class'=> 'badge badge-success']);
+                    }elseif ($model->status == Order::STATUS_PAID) {
+                        return Html::tag('span','paid',['class'=> 'badge badge-primary']);
                     }else
                     {
                         return Html::tag('span','failure',['class'=> 'badge badge-danger']);
@@ -66,7 +71,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => ActionColumn::className(),
                 'contentOptions'=>['style'=>'width:10%'],
                 'buttonOptions'=>['class'=>'action'],
-                'template'=>'{view}{delete}',
+                'template'=>'{update}{view}{delete}',
                 'urlCreator' => function ($action, $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                  }

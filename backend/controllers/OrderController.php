@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use Yii;
 use common\models\Order;
 use backend\models\search\OrderSearch;
 use yii\web\Controller;
@@ -82,7 +83,30 @@ class OrderController extends Controller
         ]);
     }
 
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
 
+        if(Yii::$app->request->isPost)
+        {
+            $status = Yii::$app->request->post('Order')['status'];
+            $model->status =$status;
+            if(!in_array($status, [Order::STATUS_COMPLETED,ORDER::STATUS_PAID]))
+            {
+               $model->addError('status','Invalid Status');
+           }else
+           {
+            $model->save() ; 
+            return $this->render('view', [
+               'model' => $this->findModel($id),
+           ]);
+        }
+    }
+
+    return $this->render('update', [
+        'model' => $this->findModel($id),
+    ]);
+}
     /**
      * Deletes an existing Order model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

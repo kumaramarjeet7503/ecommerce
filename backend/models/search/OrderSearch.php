@@ -49,7 +49,7 @@ class OrderSearch extends Order
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+        $dataProvider->sort->defaultOrder = ['created_at'=> SORT_DESC];
         // $dataProvider->sort->attribute['fullname']= [
         //     'label'=>'fullname',
         //     'asc'=>['firstname'=>SORT_ASC,'lastname'=>SORT_ASC],
