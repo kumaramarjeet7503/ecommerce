@@ -12,6 +12,7 @@ use common\models\Order;
 use common\models\OrderItem;
 use common\models\User;
 use yii\helpers\ArrayHelper;
+use backend\models\PasswordResetRequestForm;
 use DateTime;
 
 /**
@@ -176,6 +177,49 @@ class SiteController extends Controller
 
     public function actionForgetPassword()
     {
-        return 'forgetpassword';
+        $this->layout = 'blank';
+        $model = new PasswordResetRequestForm();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if ($model->sendEmail()) {
+                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
+
+                return $this->goHome();
+            }
+
+            Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
+        }
+
+        return $this->render('forget-password', [
+            'model' => $model,
+        ]);
     }
+
+ /**
+     * Resets password.
+     *
+     * @param string $token
+     * @return mixed
+     * @throws BadRequestHttpException
+     */
+    public function actionResetPassword($token)
+    {
+        $this->layout = 'blank';
+
+        try {
+            $model = new ResetPasswordForm($token);
+        } catch (InvalidArgumentException $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
+            Yii::$app->session->setFlash('success', 'New password saved.');
+
+            return $this->goHome();
+        }
+
+        return $this->render('reset-password', [
+            'model' => $model,
+        ]);
+    }
+
 }

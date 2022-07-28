@@ -5,6 +5,7 @@
 
 use backend\assets\AppAsset;
 use yii\helpers\Html;
+use common\widgets\Alert;
 
 AppAsset::register($this);
 ?>
@@ -34,6 +35,7 @@ AppAsset::register($this);
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                        
+        <?= Alert::widget()?>
                        <?php echo $content ?>
                     </div>
                 </div>

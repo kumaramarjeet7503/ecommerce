@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__.'/../../common/helpers.php';
 return [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
