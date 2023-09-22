@@ -1,60 +1,30 @@
-<p align="center">
-    <a href="https://github.com/yiisoft" target="_blank">
-        <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
-    </a>
-    <h1 align="center">Yii 2 Advanced Project Template</h1>
-    <br>
-</p>
+# Newsbook
+Newsbook is a web application that aggregates news articles from various sources, allowing users to stay updated with the latest headlines and articles. Built using modern web technologies, this project provides a user-friendly interface for browsing and searching news content from different categories and publishers.
+ Watch [Newsbook Tutorial](https://drive.google.com/file/d/1LN7EToPOIuo2FYTJMZuhRcExK7HEBN-I/view?usp=drive_link)
 
-Yii 2 Advanced Project Template is a skeleton [Yii 2](http://www.yiiframework.com/) application best for
-developing complex Web applications with multiple tiers.
+## Installation
+1. Clone this repository.
+2. Create a virtual host for your application and map it into config.php
+3. Change configuration of database as according to your DBMS in config.php
+4. Request the url  **your_app_base_path/database/create-user-table**  For example "http://news-api.localhost/database/create-user-table".
 
-The template includes three tiers: front end, back end, and console, each of which
-is a separate Yii application.
+## Usage
+1. Register yourself in the application with signup form.
+2. Try to login yourself in the application.
+3. Hurray! Enjoy the latest news feed in no time.
 
-The template is designed to work in a team development environment. It supports
-deploying the application in different environments.
+## Features
+* Follow MVC architecture.
+* Signup/Login functionality for users.
+* Display the news in a scrollable list format.
+* Implemented pagination.
+* Jquery card plugin integration 
+* News API Integration via AJAX.
 
-Documentation is at [docs/guide/README.md](docs/guide/README.md).
+## Screenshots
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/yiisoft/yii2-app-advanced.svg)](https://packagist.org/packages/yiisoft/yii2-app-advanced)
-[![Total Downloads](https://img.shields.io/packagist/dt/yiisoft/yii2-app-advanced.svg)](https://packagist.org/packages/yiisoft/yii2-app-advanced)
-[![build](https://github.com/yiisoft/yii2-app-advanced/workflows/build/badge.svg)](https://github.com/yiisoft/yii2-app-advanced/actions?query=workflow%3Abuild)
+![Screenshot 1](screenshots/login.png)
+![Screenshot 2](screenshots/signup.png)
+![Screenshot 2](screenshots/registration-successful.png)
+![Screenshot 2](screenshots/news-dashboard.png)
 
-DIRECTORY STRUCTURE
--------------------
-
-```
-common
-    config/              contains shared configurations
-    mail/                contains view files for e-mails
-    models/              contains model classes used in both backend and frontend
-    tests/               contains tests for common classes    
-console
-    config/              contains console configurations
-    controllers/         contains console controllers (commands)
-    migrations/          contains database migrations
-    models/              contains console-specific model classes
-    runtime/             contains files generated during runtime
-backend
-    assets/              contains application assets such as JavaScript and CSS
-    config/              contains backend configurations
-    controllers/         contains Web controller classes
-    models/              contains backend-specific model classes
-    runtime/             contains files generated during runtime
-    tests/               contains tests for backend application    
-    views/               contains view files for the Web application
-    web/                 contains the entry script and Web resources
-frontend
-    assets/              contains application assets such as JavaScript and CSS
-    config/              contains frontend configurations
-    controllers/         contains Web controller classes
-    models/              contains frontend-specific model classes
-    runtime/             contains files generated during runtime
-    tests/               contains tests for frontend application
-    views/               contains view files for the Web application
-    web/                 contains the entry script and Web resources
-    widgets/             contains frontend widgets
-vendor/                  contains dependent 3rd-party packages
-environments/            contains environment-based overrides
-```
