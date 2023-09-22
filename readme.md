@@ -30,10 +30,20 @@ An online platform that facilitates the buying and selling of products or servic
 * Dashboard for purchase insights, order listing and modifications.
 
 ## Screenshots
+
+### Add Product 
 ![products](https://github.com/kumaramarjeet7503/ecommerce/assets/64517073/26db0c0e-81b8-4b0a-abea-1d386186b6eb)
+
+### Dashboard
 ![dashboard](https://github.com/kumaramarjeet7503/ecommerce/assets/64517073/60c361fb-d5a4-4b6f-ab12-9c50881ffaa5)
+
+### Login
 ![login](https://github.com/kumaramarjeet7503/ecommerce/assets/64517073/cc74c179-0cc6-438d-8faf-0021f005e59b)
+
+### Order summary
 ![order-summary](https://github.com/kumaramarjeet7503/ecommerce/assets/64517073/587151f3-2c47-48b9-9c48-fb24e42dab30)
+
+### Order
 ![orders](https://github.com/kumaramarjeet7503/ecommerce/assets/64517073/9c2b5d2a-a028-4849-b64b-857731adfd3f)
 
 
