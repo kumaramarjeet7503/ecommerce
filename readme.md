@@ -2,7 +2,7 @@
 An online platform that facilitates the buying and selling of products or services over the internet. It serves as a digital marketplace where businesses and individuals can showcase their offerings, and customers can browse, select, and purchase items from the comfort of their computers or mobile devices. E-commerce websites have transformed the way people shop, making it convenient to shop 24/7, compare prices, read product reviews, and access a vast array of goods from around the world.
  * Watch [How to add product](https://drive.google.com/file/d/1C87vZXAH5mxRe4JIee1GylMjgvHve4Zu/view?usp=sharing)
  * Watch [Product purchase and order insights](https://drive.google.com/file/d/1usApccxHtzDPFLjvFv1uDPwekQMFV0NG/view?usp=sharing)
- * Watch [Usermanagement](https://drive.google.com/file/d/1BNwFp7SJTWuR__TJiv5wYDAF11XTHxB6/view?usp=sharing)
+ * Watch [User Management](https://drive.google.com/file/d/1BNwFp7SJTWuR__TJiv5wYDAF11XTHxB6/view?usp=sharing)
 
 ## Installation
 1. Clone this repository.
