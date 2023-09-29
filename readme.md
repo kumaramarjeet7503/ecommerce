@@ -4,6 +4,8 @@ An online platform that facilitates the buying and selling of products or servic
  * Watch [Product purchase and order insights](https://drive.google.com/file/d/1usApccxHtzDPFLjvFv1uDPwekQMFV0NG/view?usp=sharing)
  * Watch [User Management](https://drive.google.com/file/d/1BNwFp7SJTWuR__TJiv5wYDAF11XTHxB6/view?usp=sharing)
 
+![order-summary](https://github.com/kumaramarjeet7503/ecommerce/assets/64517073/587151f3-2c47-48b9-9c48-fb24e42dab30)
+
 ## Installation
 1. Clone this repository.
 2. Create a virtual host for your application and map it into config.php
@@ -39,9 +41,6 @@ An online platform that facilitates the buying and selling of products or servic
 
 ### Login
 ![login](https://github.com/kumaramarjeet7503/ecommerce/assets/64517073/cc74c179-0cc6-438d-8faf-0021f005e59b)
-
-### Order summary
-![order-summary](https://github.com/kumaramarjeet7503/ecommerce/assets/64517073/587151f3-2c47-48b9-9c48-fb24e42dab30)
 
 ### Order
 ![orders](https://github.com/kumaramarjeet7503/ecommerce/assets/64517073/9c2b5d2a-a028-4849-b64b-857731adfd3f)
